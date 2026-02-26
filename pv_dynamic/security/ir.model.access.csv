@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pv_modele,pv_modele,model_pv_modele,base.group_user,1,1,1,1
+access_pv_modele_champ,pv_modele_champ,model_pv_modele_champ,base.group_user,1,1,1,1
+access_pv_modele_subfield,pv_modele_subfield,model_pv_modele_subfield,base.group_user,1,1,1,1
+access_pv_pv,pv_pv,model_pv_pv,base.group_user,1,1,1,1
+access_pv_pv_champ,pv_pv_champ,model_pv_pv_champ,base.group_user,1,1,1,1
+access_pv_pv_champ_row,pv_pv_champ_row,model_pv_pv_champ_row,base.group_user,1,1,1,1
+access_pv_pv_champ_row_value,pv_pv_champ_row_value,model_pv_pv_champ_row_value,base.group_user,1,1,1,1

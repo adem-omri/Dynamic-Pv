@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- FORM VIEW: PV Instance -->
+    <record id="view_pv_pv_form" model="ir.ui.view">
+        <field name="name">pv.pv.form</field>
+        <field name="model">pv.pv</field>
+        <field name="arch" type="xml">
+            <form string="PV Instance">
+                <header/>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="PV Name (leave empty to auto-generate)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="modele_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible': [('modele_id', '=', False)]}">
+                        <page string="Dynamic Fields" name="dynamic_fields">
+                            <field name="champ_ids" context="{'default_pv_id': active_id}">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="sequence" widget="handle"/>
+
+                                    <!-- Meta fields, hidden but force_save ensures required fields are sent on save -->
+                                    <field name="is_visible" invisible="1"/>
+                                    <field name="type_champ" invisible="1" force_save="1"/>
+                                    <field name="required" invisible="1"/>
+                                    <field name="modele_champ_id" invisible="1" force_save="1"/>
+
+                                    <!-- Label (always visible, force_save since readonly + required) -->
+                                    <field name="name" readonly="1" force_save="1"/>
+
+                                    <!-- Single dynamic value column for simple types -->
+                                    <field name="value_input" readonly="0" force_save="1" attrs="{
+                                        'invisible': ['|', ('is_visible','=',False), ('type_champ','=','complex')],
+                                        'required': [('is_visible','=',True),('required','=',True)]
+                                    }"/>
+
+                                    <!-- Button to open complex row management form -->
+                                    <button name="action_open_complex" string="Manage Rows" type="object" icon="fa-list"
+                                        attrs="{'invisible': ['|', ('is_visible', '=', False), ('type_champ', '!=', 'complex')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- FORM VIEW: Complex Field Management (opened by Manage Rows button) -->
+    <record id="view_pv_champ_complex_form" model="ir.ui.view">
+        <field name="name">pv.pv.champ.complex.form</field>
+        <field name="model">pv.pv.champ</field>
+        <field name="arch" type="xml">
+            <form string="Manage Rows">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1" string="Field"/>
+                    </group>
+                    <field name="row_ids">
+                        <tree>
+                            <field name="sequence" widget="handle"/>
+                            <field name="value_ids" widget="many2many_tags" readonly="1" string="Values"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- FORM VIEW: Single Row (shows subfield values to fill in) -->
+    <record id="view_pv_champ_row_form" model="ir.ui.view">
+        <field name="name">pv.pv.champ.row.form</field>
+        <field name="model">pv.pv.champ.row</field>
+        <field name="arch" type="xml">
+            <form string="Row Values">
+                <sheet>
+                    <field name="champ_id" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="value_ids">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="subfield_id" readonly="1"/>
+                            <field name="type_champ" invisible="1"/>
+                            <field name="value_input"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW: PV Instance -->
+    <record id="view_pv_pv_tree" model="ir.ui.view">
+        <field name="name">pv.pv.tree</field>
+        <field name="model">pv.pv</field>
+        <field name="arch" type="xml">
+            <tree string="PV Instances">
+                <field name="name"/>
+                <field name="modele_id"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION: PV Instance -->
+    <record id="action_pv_pv" model="ir.actions.act_window">
+        <field name="name">PV Dynamic</field>
+        <field name="res_model">pv.pv</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MENU ITEM -->
+    <menuitem id="menu_pv_pv" name="PV Instances" parent="menu_pv_root" action="action_pv_pv" sequence="5"/>
+
+</odoo>

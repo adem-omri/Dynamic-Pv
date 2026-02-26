@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Simple Audit Template -->
+        <record id="demo_template_audit" model="pv.modele">
+            <field name="name">General Site Audit</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Atomic Fields -->
+        <record id="demo_audit_project" model="pv.modele.champ">
+            <field name="modele_id" ref="demo_template_audit"/>
+            <field name="name">Project Name</field>
+            <field name="type_champ">char</field>
+            <field name="required" eval="True"/>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="demo_audit_date" model="pv.modele.champ">
+            <field name="modele_id" ref="demo_template_audit"/>
+            <field name="name">Audit Date</field>
+            <field name="type_champ">date</field>
+            <field name="required" eval="True"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_audit_passed" model="pv.modele.champ">
+            <field name="modele_id" ref="demo_template_audit"/>
+            <field name="name">Audit Passed Successfully</field>
+            <field name="type_champ">boolean</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Conditional Field: Only visible if passed is False -->
+        <record id="demo_audit_failure_reason" model="pv.modele.champ">
+            <field name="modele_id" ref="demo_template_audit"/>
+            <field name="name">Reason for Failure</field>
+            <field name="type_champ">char</field>
+            <field name="required" eval="True"/>
+            <field name="sequence">40</field>
+            <field name="condition_field_id" ref="demo_audit_passed"/>
+            <field name="condition_operator">=</field>
+            <field name="condition_value">False</field>
+        </record>
+
+        <!-- Complex Field: Equipment List -->
+        <record id="demo_audit_equipment" model="pv.modele.champ">
+            <field name="modele_id" ref="demo_template_audit"/>
+            <field name="name">Verified Equipment</field>
+            <field name="type_champ">complex</field>
+            <field name="required" eval="True"/>
+            <field name="sequence">50</field>
+        </record>
+        
+        <record id="demo_audit_eq_sub1" model="pv.modele.subfield">
+            <field name="champ_id" ref="demo_audit_equipment"/>
+            <field name="name">Serial Number</field>
+            <field name="type_champ">char</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_audit_eq_sub2" model="pv.modele.subfield">
+            <field name="champ_id" ref="demo_audit_equipment"/>
+            <field name="name">Working Condition (%)</field>
+            <field name="type_champ">percentage</field>
+            <field name="sequence">20</field>
+        </record>
+    </data>
+</odoo>
